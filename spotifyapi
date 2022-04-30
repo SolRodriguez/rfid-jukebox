@@ -1,0 +1,22 @@
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
+
+scope = "user-modify-playback-state"
+
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id = 'd9109990854044c580294e9f4cf2ce28',
+                                               client_secret = 'fd1fd05cf4e34b2686908d9bb21e0cf7',
+                                               redirect_uri = "http://localhost/8080", scope=scope
+                                               ))
+
+
+jasmin_device_id = "7031c89bdad1f7dbd7dc8a90c39e34370de3b784" 
+song = "spotify:artist:3VNITwohbvU5Wuy5PC6dsI"
+#{"uris": ["spotify:track:561F1zqRwGPCTMRsLsXVtL", "spotify:track:51ueZKM83MTRv9rgiDfI6Y"]}
+
+#sp.pause_playback(device_id=jasmin_device_id)
+#sp.volume(20,device_id=jasmin_device_id)
+
+
+sp.start_playback(device_id=jasmin_device_id, context_uri=song)
+
+
