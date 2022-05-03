@@ -4,6 +4,8 @@ import numpy as np
 class JukeBox():
     """Keeps all the tags and their reads together"""
     def __init__(self):
+        self.current = ""
+
         #TODO: REFACTOR
         self.id2tags = {
             # b'E200204700000000000000C6' : Tag(),
@@ -19,6 +21,15 @@ class JukeBox():
         new = TagReads(tag)
         read = self.id2tags.setdefault(tag.epc, new)
         return read
+    
+    def set_current(self, album):
+        "sets currently playing album"
+        self.current = album
+        return
+
+    def get_tag(self,epc):
+        "returns Tag object for a specific RFID tag (using its epc)"
+        return self.id2tags[epc]
         
     
 

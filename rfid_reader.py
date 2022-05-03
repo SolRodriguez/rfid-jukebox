@@ -12,6 +12,8 @@ print(reader.get_supported_regions())
 reader.set_region("NA")
 reader.set_read_plan([1], "GEN2",  read_power=2000)
 
+
+
 # epcs = list(map(lambda t: t.epc, reader.read()))
 # print(epcs)
 
@@ -28,21 +30,20 @@ if CASE == 1:
             try:
                 tag = box.add_tag(t)
                 print(t.epc)
+                print('freq', t.frequency)
                 print('rssi', t.rssi)
-
-                # play a song within RRSI > -40
-                if 
-
-                spotify.play(t.epc, False)
-            
                 # print('avg', tag.avg)
                 # print('reads', tag.readings)
                 # tag.update(t.rssi)
                 # print('reads updated', tag.readings)
+
+                # play a song within RRSI > -40
+                if (t.rssi >= -40) and (box.current != spotify.id2albums[t.epc]['id']): #not playing current song
+                    spotify.play(box, t.epc, False)
                 
             except:
                 print("Can't read tag "+ t.epc)
-                tag.update(0) #RSSI = 0
+                # tag.update(0) #RSSI = 0
 elif CASE == 2:
     pass
 else CASE == 3:
