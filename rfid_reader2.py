@@ -85,9 +85,10 @@ elif CASE == 2:
                 higher_epc = new_higher_epc
             elif new_higher_epc != higher_epc:
                 higher_epc = new_higher_epc
-                print('pause song')
-                spotify.pause()
-                break
+                print('skip song')
+                spotify.skip()
+                #print('pause song')
+                #spotify.pause()
 else:
     pass
 
