@@ -46,5 +46,19 @@ if CASE == 1:
 elif CASE == 2:
     pass
 else CASE == 3:
-    pass
+    while run:
+        reads = reader.read()
+        for t in reads:
+            tag = box.add_tag(t)
+            if self.diff < 15: #tag has stopped 
+                #play id with max rssi
+                max_rssi = -1000
+                max_tag = None
+                for i,tag in box.id2tags:
+                    if tag.rssi > max_rssi:
+                        max_rssi = tag.rssi
+                        max_tag = tag
+                spotify.play(max_tag.tag.epc, False)
+
+    
 
