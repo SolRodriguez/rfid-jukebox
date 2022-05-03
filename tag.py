@@ -1,11 +1,9 @@
 import mercury
 import numpy as np
 
-
-class AlbumTags():
+class JukeBox():
     """Keeps all the tags and their reads together"""
     def __init__(self):
-        
         #TODO: REFACTOR
         self.id2tags = {
             # b'E200204700000000000000C6' : Tag(),
