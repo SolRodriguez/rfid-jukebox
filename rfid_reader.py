@@ -3,7 +3,7 @@ import mercury
 from tag import JukeBox
 from spotifyapi import SpotifyAPI
 
-device = "tmr:///dev/cu.usbmodem143201"
+device = "tmr:///dev/cu.usbmodem141201"
 reader = mercury.Reader(device, baudrate=115200)
 
 print(reader.get_model())
@@ -17,7 +17,7 @@ reader.set_read_plan([1], "GEN2",  read_power=2000)
 # epcs = list(map(lambda t: t.epc, reader.read()))
 # print(epcs)
 
-CASE = 1 #num of tags being tested (1,2,3)
+CASE = 3 #num of tags being tested (1,2,3)
 
 box = JukeBox()
 spotify = SpotifyAPI()
@@ -42,24 +42,61 @@ if CASE == 1:
                     spotify.play(box, t.epc, False)
                 
             except:
-                print("Can't read tag "+ t.epc)
+                print("Can't read tag ")
                 # tag.update(0) #RSSI = 0
 elif CASE == 2:
     pass
-else CASE == 3:
+
+elif CASE == 3:
+    l = 0 # counts how many iterations it is stopped for
+    prev_tag = None
     while run:
         reads = reader.read()
         for t in reads:
-            tag = box.add_tag(t)
-            if self.diff < 15: #tag has stopped 
-                #play id with max rssi
-                max_rssi = -1000
-                max_tag = None
-                for i,tag in box.id2tags:
-                    if tag.rssi > max_rssi:
-                        max_rssi = tag.rssi
-                        max_tag = tag
-                spotify.play(max_tag.tag.epc, False)
+            try:
+                if t.epc not in box.id2tags:
+                    tag = box.add_tag(t)
+                    print("should ont be in here")
+                else:
+                    tag = box.get_tag(t.epc)  
+
+                    if tag.diff < 15: #tag has stopped 
+                        #play id with max rssi
+                        max_rssi = -1000
+                        max_tag = None
+                        for i in box.id2tags: #compare all the RSSIs
+                            tag_val = box.id2tags[i] 
+                            print(tag_val.tag.epc, tag_val.tag.rssi)
+                            if tag_val.avg > max_rssi:
+                                max_rssi = tag_val.avg
+                                max_tag = tag_val
+                                if prev_tag is None:
+                                    prev_tag = max_tag
+
+                        print("l")
+                        print(l)
+                        if (l > 15): #only play music if wheel constantly stagnant
+                            print("wheel stopping")
+                            spotify.play(max_tag.tag.epc, False) 
+                            run = False
+                            break
+                        else:
+                            if prev_tag != max_tag:
+                                print("stuck here??")
+                                l = 0
+                            else:
+                                prev_tag = 
+                                print("increasing l")
+                                l += 1
+                    else:
+                        print("here")
+                        l = 0
+                    
+                    tag.update(t.rssi)
+
+            except Exception as e: 
+                print(e)
+
 
     
 

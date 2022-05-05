@@ -12,7 +12,8 @@ class SpotifyAPI():
                                                 ))
         self.jasmin_device_id = "7031c89bdad1f7dbd7dc8a90c39e34370de3b784"
         self.sol_device_id = "fb7706bb9b901a4410cfa232b2720fd7d9d5110f"
-        
+        self.device = self.jasmin_device_id
+
         self.id2albums = {
             b'E200204700000000000000C6' : {"name": "Adele", "id": "spotify:album:21jF5jlMtzo94wbxmJ18aa"},
             b'E20020470000000000000D32' : {"name": "Michael Jackson", "id": "spotify:album:2ANVost0y2y52ema1E9xAZ"},
@@ -30,7 +31,7 @@ class SpotifyAPI():
             # print(epc)
             print('playing ', name)
         else:
-            self.sp.start_playback(device_id = self.sol_device_id,
+            self.sp.start_playback(device_id = self.device,
                                     context_uri = album)
         return
     
@@ -40,7 +41,7 @@ class SpotifyAPI():
         if debug:
             print(volume)
         else:
-            self.sp.volume(volume,device_id=self.sol_device_id)
+            self.sp.volume(volume,device_id=self.device)
 
         return
     
@@ -49,7 +50,7 @@ class SpotifyAPI():
         if debug:
             print('pause')
         else:
-            self.sp.pause_playback(device_id=self.sol_device_id)
+            self.sp.pause_playback(device_id=self.device)
         return
 
 

@@ -39,13 +39,14 @@ class TagReads():
         self.tag = tag
         self.readings = [0,0,0]
         self.avg = np.mean(self.readings)
-        self.diff = np.abs(self.readings[-1]-self.readings[0])
+        self.diff = 0
 
     def update(self, rssi):
         """updates the running average"""
         new_rdgs = self.readings[1:]+[rssi]
         self.avg = np.mean(new_rdgs)
         self.readings = new_rdgs
+        self.diff = np.abs(self.readings[-1]-self.readings[0])
         return
     
 
