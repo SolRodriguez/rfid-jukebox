@@ -1,6 +1,6 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-
+import time
 class SpotifyAPI():
     """Spotify API"""
     def __init__(self):
@@ -10,10 +10,11 @@ class SpotifyAPI():
                                                 redirect_uri = "http://localhost/8080", 
                                                 scope = self.scope
                                                 ))
+
         self.jasmin_device_id = "7031c89bdad1f7dbd7dc8a90c39e34370de3b784"
         self.sol_device_id = "fb7706bb9b901a4410cfa232b2720fd7d9d5110f"
-        self.device = self.jasmin_device_id
-
+        self.device_id = self.sol_device_id
+        
         self.id2albums = {
             b'E200204700000000000000C6' : {"name": "Adele", "id": "spotify:album:21jF5jlMtzo94wbxmJ18aa"},
             b'E20020470000000000000D32' : {"name": "Michael Jackson", "id": "spotify:album:2ANVost0y2y52ema1E9xAZ"},
@@ -22,8 +23,13 @@ class SpotifyAPI():
             # , b'E200204700000000000000C3' : {"name": "Adele", "id": "spotify:album:6126O4XLYAfzU3961ziahP"},
             # b'30342CBD1C1D1390891F3759' : {"name": "Adele", "id": "spotify:album:21jF5jlMtzo94wbxmJ18aa"},
         }
+
+        self.idpairs2albums = {
+            b'E200204700000000000000C6' : {"name": "Adele", "id": "spotify:album:21jF5jlMtzo94wbxmJ18aa", "pair": b'E200204700000000000000B7'},
+            b'E200204700000000000000B7' : {"name": "Adele", "id": "spotify:album:21jF5jlMtzo94wbxmJ18aa", "pair": b'E200204700000000000000C6'}
+        }
     
-    def play(self, epc, debug = False):
+    def play(self, jukebox, epc, debug = False):
         """plays album of designated tag"""
         album = self.id2albums[epc]['id']
         name = self.id2albums[epc]['name']
@@ -31,8 +37,13 @@ class SpotifyAPI():
             # print(epc)
             print('playing ', name)
         else:
-            self.sp.start_playback(device_id = self.device,
+            print('playing ', name)
+            jukebox.set_current(epc)
+            self.sp.start_playback(device_id = self.device_id,
                                     context_uri = album)
+            time.sleep(2)
+                
+            
         return
     
 
@@ -41,8 +52,7 @@ class SpotifyAPI():
         if debug:
             print(volume)
         else:
-            self.sp.volume(volume,device_id=self.device)
-
+            self.sp.volume(volume,device_id=self.device_id)
         return
     
     def pause(self, debug= False):
@@ -50,7 +60,25 @@ class SpotifyAPI():
         if debug:
             print('pause')
         else:
-            self.sp.pause_playback(device_id=self.device)
+            self.sp.pause_playback(device_id=self.device_id)
+        return
+    
+    def play2(self, epc1, debug = False):
+        """plays album of designated tag"""
+        album = self.idpairs2albums[epc1]['id']
+        name = self.idpairs2albums[epc1]['name']
+        print('playing ', name)
+        if debug:
+            # print(epc)
+            print('playing ', name)
+        else:
+            self.sp.start_playback(device_id = self.device_id,
+                                    context_uri = album)
+        return self.idpairs2albums[epc1]['pair']
+
+    def skip(self):
+        "skip"
+        self.sp.next_track(device_id=self.device_id)
         return
 
 

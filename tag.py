@@ -4,17 +4,21 @@ import numpy as np
 class JukeBox():
     """Keeps all the tags and their reads together"""
     def __init__(self):
-        self.current = ""
+        self.current = "" #epc of the tag whose album is currently playing
+        self.queued = "" #epc of next song to play
+        self.max_tag = None #epc of the tag w largest tag.avg
 
-        #TODO: REFACTOR
+        self.times_seen = 0
+        
+
         self.id2tags = {
             # b'E200204700000000000000C6' : Tag(),
             # b'E20020470000000000000D32' : Tag(),
             # b'E200204700000000000000B6' : Tag(),
-            # b'E200204700000000000000B7' : 
-            # , b'E200204700000000000000C3' : {"name": "Adele", "id": "spotify:album:6126O4XLYAfzU3961ziahP"},
-            # b'30342CBD1C1D1390891F3759' : {"name": "Adele", "id": "spotify:album:21jF5jlMtzo94wbxmJ18aa"},
+            # etc.
         }
+
+
 
     def add_tag(self, tag):
         """adds tag to dict"""
@@ -30,8 +34,28 @@ class JukeBox():
     def get_tag(self,epc):
         "returns Tag object for a specific RFID tag (using its epc)"
         return self.id2tags[epc]
-        
     
+    def update_max_tag(self):
+        "updates tag w max avg rssi"
+        max_avg = float('-Inf')
+        for epc, tag  in self.id2tags.items():
+
+            if tag.avg > max_avg:
+                max_avg = tag.avg
+                self.max_tag = epc
+                self.queued = epc
+
+                # print(self.max_tag,self.queued)
+                if (self.max_tag != self.queued):
+                    self.queued = epc
+                    self.times_seen = 0
+                else:
+                    self.times_seen += 1
+                    
+        return 
+
+
+
 
 class TagReads():
     """Keeps track of the average RSSI for each tag from its previous 3 rdgs"""
